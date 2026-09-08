@@ -72,12 +72,11 @@ product-management
 ## Installation
 
 1. Clone the repository
-   ```bash
-   git clone https://github.com/jojo-valentine/product-management.git
-   cd product-management
-   ```
+```bash
+git clone https://github.com/jojo-valentine/product-management.git
+cd product-management
+```
 
-````
 2. Install dependencies
 ```bash
 cd client
