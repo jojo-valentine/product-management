@@ -38,6 +38,8 @@
 - Docker
 
 ## Project Structure
+
+```txt
 product-management
   ├── client/                # Frontend (Next.js)
   │   ├── app/               # Pages & routing
@@ -65,13 +67,33 @@ product-management
   │   └── logs/              # Log files
   │
   └── docker-compose.yml     # Run client + server together
+```
+
 ## Installation
 
+1. Clone the repository
+   ```bash
+   git clone https://github.com/jojo-valentine/product-management.git
+   cd product-management
+   ```
+
+````
+2. Install dependencies
+```bash
+cd client
+npm install
+cd ../server
+npm install
+````
+
 ## Environment Variables
+
 # client/.env
+
 NEXT_PUBLIC_API_URL=http://localhost:4000
 
 # server/.env
+
 PORT=4000
 DB_HOST=localhost
 DB_USER=root
@@ -80,7 +102,9 @@ DB_NAME=
 REDIS_URL=redis://localhost:6379
 
 ## API Documentation
+
 Swagger UI: http://localhost4000/api-docs/
+
 ## Screenshots
 
 ## Author
