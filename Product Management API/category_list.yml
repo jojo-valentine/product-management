@@ -1,0 +1,23 @@
+info:
+  name: category_list
+  type: http
+  seq: 9
+
+http:
+  method: GET
+  url: "{{base_url}}/api/category/lists?page=1"
+  params:
+    - name: page
+      value: "1"
+      type: query
+    - name: serach
+      value: ""
+      type: query
+      disabled: true
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

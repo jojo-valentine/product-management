@@ -1,0 +1,25 @@
+info:
+  name: products_delete_image
+  type: http
+  seq: 4
+
+http:
+  method: DELETE
+  url: "{{base_url}}/api/products/:productId/images/:imageId"
+  headers:
+    - name: ""
+      value: ""
+  params:
+    - name: productId
+      value: 2c626f66-0c33-452e-b1b4-3c0e2802d747
+      type: path
+    - name: imageId
+      value: a7e5e9b5-6530-4131-a221-d5bf38ba4057
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

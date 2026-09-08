@@ -1,0 +1,33 @@
+info:
+  name: products_action_status
+  type: http
+  seq: 7
+
+http:
+  method: PATCH
+  url: "{{base_url}}/api/products/:id/status"
+  headers:
+    - name: Content-Type
+      value: application/json
+  params:
+    - name: id
+      value: 2c626f66-0c33-452e-b1b4-3c0e2802d747
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "status":"{{status}}"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: status
+      value: inactive
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

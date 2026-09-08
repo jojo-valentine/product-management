@@ -1,0 +1,38 @@
+info:
+  name: category_create
+  type: http
+  seq: 10
+
+http:
+  method: POST
+  url: "{{base_url}}/api/category/store"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "name":"{{name}}",
+        "description":"{{description}}",
+        "status":"{{status}}"
+        
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: name
+      value: hehe2
+    - name: description
+      value: test
+    - name: status
+      value:
+        type: boolean
+        data: "true"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

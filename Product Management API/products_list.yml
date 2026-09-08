@@ -1,0 +1,29 @@
+info:
+  name: products_list
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/api/products/lists?categoryId=d40ea464-3631-4f66-9125-6af5b72821d7,ba6d6555-1b70-427f-be5a-6025b91991de&page=1&limit=10"
+  params:
+    - name: categoryId
+      value: d40ea464-3631-4f66-9125-6af5b72821d7,ba6d6555-1b70-427f-be5a-6025b91991de
+      type: query
+    - name: page
+      value: "1"
+      type: query
+    - name: search
+      value: Outdoors
+      type: query
+      disabled: true
+    - name: limit
+      value: "10"
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

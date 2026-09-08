@@ -1,0 +1,19 @@
+info:
+  name: products_delete
+  type: http
+  seq: 8
+
+http:
+  method: DELETE
+  url: "{{base_url}}/api/products/:id"
+  params:
+    - name: id
+      value: a18d1bed-fbd3-459d-b609-e9d6bafb7728
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

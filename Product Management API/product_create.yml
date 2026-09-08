@@ -1,0 +1,55 @@
+info:
+  name: product_create
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/api/products/store"
+  headers:
+    - name: Content-Type
+      value: multipart/form-data
+  body:
+    type: multipart-form
+    data:
+      - name: name
+        type: text
+        value: welcome
+        contentType: Text
+      - name: detail
+        type: text
+        value: The Extended systemic infrastructure Salad offers reliable performance and descriptive design
+        contentType: Text
+      - name: price
+        type: text
+        value: "2000"
+        contentType: number
+      - name: stock
+        type: text
+        value: "56"
+        contentType: quantity
+      - name: status
+        type: text
+        value: active
+        contentType: Text
+      - name: images
+        type: file
+        value:
+          - C:\Users\UsEr\Downloads\Gemini_Generated_Image_yykjlbyykjlbyykj.png
+        contentType: image/png
+      - name: images
+        type: text
+        value: ""
+      - name: categoryIds
+        type: text
+        value: bfe1bc95-25bc-4975-b634-f6445fe5c659
+      - name: categoryIds
+        type: text
+        value: d6703718-5004-4c74-a2a0-e71eef216aaa
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

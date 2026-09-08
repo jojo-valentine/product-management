@@ -1,0 +1,45 @@
+info:
+  name: products_update
+  type: http
+  seq: 6
+
+http:
+  method: PUT
+  url: "{{base_url}}/api/products/:id"
+  headers:
+    - name: Content-Type
+      value: application/json
+  params:
+    - name: id
+      value: 2c626f66-0c33-452e-b1b4-3c0e2802d747
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "name":"{{name}}",
+        "detail":"{{detail}}",
+        "price":"{{price}}",
+        "stock":"{{stock}}",
+        "categoryIds":"{{categoryIds}}"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: name
+      value: แคน
+    - name: detail
+      value: The Extended systemic infrastructure Salad offers reliable performance and descriptive design
+    - name: price
+      value: "30000"
+    - name: stock
+      value: "23556"
+    - name: categoryIds
+      value: d6703718-5004-4c74-a2a0-e71eef216aaa,bfe1bc95-25bc-4975-b634-f6445fe5c659,5e027aba-11f0-42bf-b324-cbd7391931a6
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

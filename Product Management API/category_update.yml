@@ -1,0 +1,36 @@
+info:
+  name: category_update
+  type: http
+  seq: 11
+
+http:
+  method: PUT
+  url: "{{base_url}}/api/category/:id/update/"
+  headers:
+    - name: Content-Type
+      value: application/json
+  params:
+    - name: id
+      value: 47f6f94d-7b82-45f5-8ef5-d360fb4a187a
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "name" :"{{name}}",
+        "description":"{{description}}"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: name
+      value: "1234566"
+    - name: description
+      value: zero
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,36 @@
+info:
+  name: products_image_action_status
+  type: http
+  seq: 5
+
+http:
+  method: PATCH
+  url: "{{base_url}}/api/products/:productId/images/:imageId/visibility"
+  headers:
+    - name: Content-Type
+      value: application/json
+  params:
+    - name: productId
+      value: a18d1bed-fbd3-459d-b609-e9d6bafb7728
+      type: path
+    - name: imageId
+      value: 675a127a-4a46-4b8f-80a9-4135a7aa913d
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "status":"{{status}}"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: status
+      value: inactive
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

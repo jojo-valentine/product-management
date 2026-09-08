@@ -1,0 +1,33 @@
+info:
+  name: category_change_status
+  type: http
+  seq: 12
+
+http:
+  method: PATCH
+  url: "{{base_url}}/api/category/:id/action"
+  headers:
+    - name: Content-Type
+      value: application/json
+  params:
+    - name: id
+      value: 47f6f94d-7b82-45f5-8ef5-d360fb4a187a
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "status":"{{status}}"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: status
+      value: "0"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
