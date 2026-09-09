@@ -72,18 +72,20 @@ product-management
 ## Installation
 
 1. Clone the repository
+
 ```bash
 git clone https://github.com/jojo-valentine/product-management.git
 cd product-management
 ```
 
 2. Install dependencies
+
 ```bash
 cd client
 npm install
 cd ../server
 npm install
-````
+```
 
 ## Environment Variables
 
@@ -108,7 +110,7 @@ Swagger UI: http://localhost4000/api-docs/
 
 ## Author
 
-<!-- 1. Clone the repository
+1. Clone the repository
 
 2. Install dependencies
 
@@ -122,4 +124,11 @@ Swagger UI: http://localhost4000/api-docs/
    client/.env.example
    server/.env.example
 
-5. Start the application -->
+5. Run migrations and seeders
+
+```bash
+    npx sequelize-cli db:migrate
+    npx sequelize-cli db:seed --seed 20260731141000-demo-all.ts
+```
+
+ุ6. Start the application
