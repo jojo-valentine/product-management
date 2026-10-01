@@ -1,10 +1,10 @@
 import rateLimit from "express-rate-limit";
 
+const isLoadTest = process.env.LOAD_TEST === "true";
+
 export const apiLimiter = rateLimit({
-  // windowMs: 15 * 60 * 1000, // 15 นาที
-  // limit: 1000, // 100 requests/IP
-  windowMs: 60 * 1000, // 1 นาที
-  max: 1000,
+  windowMs: 60 * 1000,
+  max: isLoadTest ? 100000 : 1000,
   standardHeaders: true,
   legacyHeaders: false,
   message: {

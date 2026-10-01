@@ -74,7 +74,7 @@ export class CacheService {
     return this.clearList("products:*");
   }
   static async clearCategoryList() {
-    return this.clearList("products:*");
+    return this.clearList("categories:*");
   }
   static async clearProduct(uuid: string) {
     return this.clearData(`product:${uuid}`);

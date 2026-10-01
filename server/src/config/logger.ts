@@ -13,7 +13,7 @@ let logger: Logger;
 
 if (process.env.NODE_ENV === "production") {
   // Production → เขียนลงไฟล์
-  console.log("log production working");
+  // console.log("log production working");
   
   const logStream = fs.createWriteStream(path.join(logDir, "app.log"), {
     flags: "a",

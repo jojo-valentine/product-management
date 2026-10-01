@@ -261,7 +261,7 @@ export async function validateProductUpdate(data: {
     }
   }
 
-  return { errors: [], data: parsed.data };
+  return { errors, data: parsed.data };
 }
 
 export async function validateProductUpdateStatus(data: { status: string }) {

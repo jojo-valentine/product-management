@@ -78,9 +78,7 @@ class ProductController {
         },
       };
 
-      // 🔎 filter by categoryUuids
       if (categoryId.length > 0) {
-        // where.categoryUuids = category;
         includeCategory.where = {
           uuid: {
             [Op.in]: categoryId,
@@ -94,11 +92,9 @@ class ProductController {
         `:search=${encodeURIComponent(search)}` +
         `:page=${page}` +
         `:limit=${limit}`;
-      // 🔎 เช็ค cache ก่อน
       if (redisClient) {
         const cached = await redisClient.get(cacheKey);
         if (cached) {
-          // console.log(`✅ ใช้ cache: ${cacheKey}`);
           return res.json(JSON.parse(cached));
         }
       }
