@@ -108,6 +108,20 @@ Swagger UI: http://localhost4000/api-docs/
 
 ## Screenshots
 
+### API Testing
+
+- API testing with Bruno
+- Bruno CLI used to run the API collection from the command line
+- Tested product, category, image, and dashboard endpoints
+- Supports environment-based execution
+
+### Bruno CLI
+
+API collection can be executed from the command line using Bruno CLI.
+
+```bash
+bru run --env http
+```
 ## Author
 
 1. Clone the repository

@@ -42,6 +42,7 @@ class ProductController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const search = typeof searchRaw === "string" ? searchRaw.trim() : "";
+      const { minPrice, maxPrice } = req.query;
       if (search.length > 100)
         return res.status(400).json({ message: "Search query too long" });
       if (page < 1)
@@ -60,8 +61,11 @@ class ProductController {
             : [];
 
       const offset = (page - 1) * limit;
-      const where: any = {};
-
+      const where: any = {
+        status: "active",
+        deletedAt: null,
+      };
+      
       if (search) {
         where[Op.or] = [
           { name: { [Op.like]: `%${search}%` } },
@@ -69,6 +73,19 @@ class ProductController {
           { tagId: { [Op.like]: `%${search}%` } },
         ];
       }
+
+      if (minPrice || maxPrice) {
+        where.price = {};
+
+        if (minPrice) {
+          where.price[Op.gte] = Number(minPrice);
+        }
+
+        if (maxPrice) {
+          where.price[Op.lte] = Number(maxPrice);
+        }
+      }
+
       const includeCategory: IncludeOptions = {
         model: Category,
         as: "categories",
