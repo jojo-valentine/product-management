@@ -104,7 +104,7 @@ REDIS_URL=redis://localhost:6379
 
 ## API Documentation
 
-Swagger UI: http://localhost4000/api-docs/
+Swagger UI: http://localhost:4000/api-docs/
 
 ## Screenshots
 
