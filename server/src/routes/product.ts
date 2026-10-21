@@ -483,6 +483,87 @@ router.patch(
   "/:productId/images/:imageId/visibility",
   ProductController.toggleImageVisibility,
 );
+/**
+ * @swagger
+ * /api/products/client/lists:
+ *   get:
+ *     summary: ดึงรายการสินค้าสำหรับหน้าร้าน
+ *     tags:
+ *       - Client Products
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: ค้นหาจากชื่อ รายละเอียด หรือรหัสสินค้า
+ *         example: printer
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *           minimum: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *           minimum: 1
+ *           maximum: 100
+ *       - in: query
+ *         name: minPrice
+ *         schema:
+ *           type: number
+ *         example: 1000
+ *       - in: query
+ *         name: maxPrice
+ *         schema:
+ *           type: number
+ *         example: 5000
+ *       - in: query
+ *         name: categoryId
+ *         schema:
+ *           type: string
+ *         description: UUID หมวดหมู่หลายรายการ คั่นด้วย comma
+ *         example: d40ea464-3631-4f66-9125-6af5b72821d7,ba6d6555-1b70-427f-be5a-6025b91991de
+ *     responses:
+ *       200:
+ *         description: ดึงรายการสินค้าสำเร็จ
+ *       400:
+ *         description: Query parameter ไม่ถูกต้อง
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/client/lists", ProductController.getProductListClient);
+
+/**
+ * @swagger
+ * /api/products/client/product/detail/{id}:
+ *   get:
+ *     summary: ดึงรายละเอียดสินค้าสำหรับหน้าร้าน
+ *     tags:
+ *       - Client Products
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: UUID ของสินค้า
+ *         example: 00e05771-19de-4d69-becf-727fdaabcb05
+ *     responses:
+ *       200:
+ *         description: ดึงรายละเอียดสินค้าสำเร็จ
+ *       404:
+ *         description: ไม่พบสินค้า
+ *       500:
+ *         description: Internal server error
+ */
+router.get(
+  "/client/product/detail/:id",
+  ProductController.getProductDetailClient,
+);
 // router.get("/", (req: Request, res: Response) => {
 //   res.send("✅ Product API is working!");
 // });

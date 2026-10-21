@@ -11,7 +11,7 @@ http:
       value: application/json
   params:
     - name: id
-      value: 2c626f66-0c33-452e-b1b4-3c0e2802d747
+      value: 31382574-e757-419a-876b-3bb05e12757a
       type: path
   body:
     type: json
@@ -34,7 +34,7 @@ runtime:
     - name: price
       value: "30000"
     - name: stock
-      value: "23556"
+      value: "0"
     - name: categoryIds
       value: d6703718-5004-4c74-a2a0-e71eef216aaa,bfe1bc95-25bc-4975-b634-f6445fe5c659,5e027aba-11f0-42bf-b324-cbd7391931a6
 

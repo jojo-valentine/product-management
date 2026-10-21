@@ -1,0 +1,23 @@
+info:
+  name: pay_order_client
+  type: http
+  seq: 21
+
+http:
+  method: PATCH
+  url: "{{base_url}}/api/orders/:uuid/pay"
+  headers:
+    - name: Content-Type
+      value: application/json
+      disabled: true
+  params:
+    - name: uuid
+      value: 47485c19-df49-4a53-8bfe-a35f59aef760
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

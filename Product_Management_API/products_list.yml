@@ -5,21 +5,31 @@ info:
 
 http:
   method: GET
-  url: "{{base_url}}/api/products/lists?categoryId=d40ea464-3631-4f66-9125-6af5b72821d7,ba6d6555-1b70-427f-be5a-6025b91991de&page=1&limit=10"
+  url: "{{base_url}}/api/products/lists?page=1"
   params:
     - name: categoryId
       value: d40ea464-3631-4f66-9125-6af5b72821d7,ba6d6555-1b70-427f-be5a-6025b91991de
       type: query
+      disabled: true
     - name: page
       value: "1"
       type: query
     - name: search
-      value: Outdoors
+      value: 31382574-e757-419a-876b-3bb05e12757a
       type: query
       disabled: true
     - name: limit
       value: "10"
       type: query
+      disabled: true
+    - name: minPrice
+      value: "1"
+      type: query
+      disabled: true
+    - name: maxPrice
+      value: "1"
+      type: query
+      disabled: true
   auth: inherit
 
 settings:

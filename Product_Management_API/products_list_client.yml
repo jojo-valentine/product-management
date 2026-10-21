@@ -1,0 +1,38 @@
+info:
+  name: products_list_client
+  type: http
+  seq: 18
+
+http:
+  method: GET
+  url: "{{base_url}}/api/products/client/lists?page=1&limit=10"
+  params:
+    - name: page
+      value: "1"
+      type: query
+    - name: limit
+      value: "10"
+      type: query
+    - name: maxPrice
+      value: "1"
+      type: query
+      disabled: true
+    - name: categoryId
+      value: d40ea464-3631-4f66-9125-6af5b72821d7,ba6d6555-1b70-427f-be5a-6025b91991de
+      type: query
+      disabled: true
+    - name: search
+      value: Outdoors
+      type: query
+      disabled: true
+    - name: minPrice
+      value: "1"
+      type: query
+      disabled: true
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

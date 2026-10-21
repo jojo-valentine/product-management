@@ -1,6 +1,8 @@
 import Product from "./Product";
 import Category from "./Category";
 import ProductImage from "./ProductImage";
+import Order from "./Order";
+import OrderItem from "./OrderItem";
 import ProductCategories from "./ProductCategories";
 
 // One-to-many
@@ -18,5 +20,24 @@ Category.belongsToMany(Product, {
   foreignKey: "categoryId",
   as: "products",
 });
+Order.hasMany(OrderItem, {
+  foreignKey: "orderId",
+  as: "items",
+});
 
-export { Product, Category, ProductImage, ProductCategories };
+OrderItem.belongsTo(Order, {
+  foreignKey: "orderId",
+  as: "order",
+});
+
+Product.hasMany(OrderItem, {
+  foreignKey: "productId",
+  as: "orderItems",
+});
+
+OrderItem.belongsTo(Product, {
+  foreignKey: "productId",
+  as: "product",
+});
+
+export { Product, Category, ProductImage, ProductCategories, Order, OrderItem };

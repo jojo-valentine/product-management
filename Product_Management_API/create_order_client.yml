@@ -1,0 +1,44 @@
+info:
+  name: create_order_client
+  type: http
+  seq: 20
+
+http:
+  method: POST
+  url: "{{base_url}}/api/orders/create-order"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |
+      {
+        "customerName": "{{customerName}}",
+        "customerPhone": "{{customerPhone}}",
+        "items": [
+          {
+            "productUuid": "{{productUuid}}",
+            "quantity": "{{quantity}}"
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: customerName
+      value: สมชาย ใจดี
+    - name: productUuid
+      value: a1b2c3d4
+    - name: customerPhone
+      value: "0812345678 "
+    - name: quantity
+      value:
+        type: number
+        data: "2"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

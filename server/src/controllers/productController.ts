@@ -31,7 +31,10 @@ import {
 import logger from "../config/logger";
 import { uuid } from "zod";
 import { redisClient } from "../config/redis";
-import { ProductResource } from "../resources/ProductResource";
+import {
+  ProductClientResource,
+  ProductResource,
+} from "../resources/ProductResource";
 import { CacheService } from "../services/CacheService";
 import { findProductWithRelations } from "../repositories/productRepository";
 
@@ -42,7 +45,9 @@ class ProductController {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const search = typeof searchRaw === "string" ? searchRaw.trim() : "";
-      const { minPrice, maxPrice } = req.query;
+      const minPrice = (req.query.minPrice as string) || "";
+      const maxPrice = (req.query.maxPrice as string) || "";
+
       if (search.length > 100)
         return res.status(400).json({ message: "Search query too long" });
       if (page < 1)
@@ -65,7 +70,7 @@ class ProductController {
         status: "active",
         deletedAt: null,
       };
-      
+
       if (search) {
         where[Op.or] = [
           { name: { [Op.like]: `%${search}%` } },
@@ -103,10 +108,14 @@ class ProductController {
           status: true,
         };
       }
+      const minPriceKey = typeof minPrice === "string" ? minPrice : "";
+      const maxPriceKey = typeof maxPrice === "string" ? maxPrice : "";
       const categoryKey = [...categoryId].sort().join(",");
       const cacheKey =
         `products:category=${encodeURIComponent(categoryKey)}` +
         `:search=${encodeURIComponent(search)}` +
+        `:minPrice=${encodeURIComponent(minPriceKey)}` +
+        `:maxPrice=${encodeURIComponent(maxPriceKey)}` +
         `:page=${page}` +
         `:limit=${limit}`;
       if (redisClient) {
@@ -149,9 +158,9 @@ class ProductController {
         distinct: true,
       });
 
-      if (!products || products.length === 0) {
-        return res.status(404).json({ message: "No products found" });
-      }
+      // if (!products || products.length === 0) {
+      //   return res.status(404).json({ message: "No products found" });
+      // }
       const result = {
         data: products,
         pagination: {
@@ -332,7 +341,6 @@ class ProductController {
       });
     }
   }
-
   static async productImageStore(req: Request, res: Response) {
     const { id: productUuid } = req.params;
     if (typeof productUuid !== "string") {
@@ -917,6 +925,251 @@ class ProductController {
         error: error instanceof Error ? error.message : String(error),
       });
       return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+  static async getProductListClient(req: Request, res: Response) {
+    try {
+      const searchRaw = (req.query.search as string) || "";
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const search = typeof searchRaw === "string" ? searchRaw.trim() : "";
+      const minPrice = (req.query.minPrice as string) || "";
+      const maxPrice = (req.query.maxPrice as string) || "";
+
+      if (search.length > 100)
+        return res.status(400).json({ message: "Search query too long" });
+      if (page < 1)
+        return res.status(400).json({ message: "Page must be >= 1" });
+      if (limit < 1 || limit > 100)
+        return res
+          .status(400)
+          .json({ message: "Limit must be between 1 and 100" });
+      const categoryRaw = req.query.categoryId;
+
+      const categoryId =
+        typeof categoryRaw === "string"
+          ? categoryRaw.split(",")
+          : Array.isArray(categoryRaw)
+            ? categoryRaw
+            : [];
+
+      const offset = (page - 1) * limit;
+      const where: any = {
+        status: "active",
+        deletedAt: null,
+      };
+
+      if (search) {
+        where[Op.or] = [
+          { name: { [Op.like]: `%${search}%` } },
+          { detail: { [Op.like]: `%${search}%` } },
+          { tagId: { [Op.like]: `%${search}%` } },
+        ];
+      }
+
+      if (minPrice || maxPrice) {
+        where.price = {};
+
+        if (minPrice) {
+          where.price[Op.gte] = Number(minPrice);
+        }
+
+        if (maxPrice) {
+          where.price[Op.lte] = Number(maxPrice);
+        }
+      }
+
+      const includeCategory: IncludeOptions = {
+        model: Category,
+        as: "categories",
+        attributes: ["uuid", "name"],
+        through: {
+          attributes: [],
+        },
+        where: {
+          status: true,
+          deletedAt: {
+            [Op.is]: null,
+          },
+        },
+      };
+
+      if (categoryId.length > 0) {
+        includeCategory.where = {
+          uuid: {
+            [Op.in]: categoryId,
+          },
+          status: true,
+        };
+      }
+      const minPriceKey = typeof minPrice === "string" ? minPrice : "";
+      const maxPriceKey = typeof maxPrice === "string" ? maxPrice : "";
+      const categoryKey = [...categoryId].sort().join(",");
+      const cacheKey =
+        `productsClient:category=${encodeURIComponent(categoryKey)}` +
+        `:search=${encodeURIComponent(search)}` +
+        `:minPrice=${encodeURIComponent(minPriceKey)}` +
+        `:maxPrice=${encodeURIComponent(maxPriceKey)}` +
+        `:page=${page}` +
+        `:limit=${limit}`;
+      if (redisClient) {
+        const cached = await redisClient.get(cacheKey);
+        if (cached) {
+          return res.json(JSON.parse(cached));
+        }
+      }
+
+      const { rows: products, count } = await Product.findAndCountAll({
+        where,
+        limit,
+        offset,
+        order: [["createdAt", "DESC"]],
+        attributes: [
+          "uuid",
+          "tagId",
+          "name",
+          "detail",
+          "price",
+          "stock",
+          "status",
+          "createdAt",
+        ],
+        include: [
+          includeCategory,
+          {
+            model: ProductImage,
+            as: "images",
+            where: {
+              deletedAt: {
+                [Op.is]: null,
+              },
+            },
+            attributes: ["uuid", "path", "image"],
+            required: false,
+          },
+        ],
+        distinct: true,
+      });
+
+      const result = {
+        data: products.map((p) => ProductClientResource.toJSON(p)),
+        pagination: {
+          total: count,
+          page: Number(page),
+          limit: Number(limit),
+          totalPages: Math.ceil(count / Number(limit)),
+        },
+      };
+      // console.log(`💾 เก็บ product cache ใหม่: ${cacheKey}`);
+      if (redisClient) {
+        await redisClient.set(cacheKey, JSON.stringify(result), { EX: 60 });
+      }
+      return res.json(result);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("❌ Get products failed:", error.message);
+      } else {
+        console.error("❌ Get products failed:", error);
+      }
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+  static async getProductDetailClient(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      if (typeof id !== "string") {
+        return res.status(400).json({
+          message: "Invalid product UUID",
+        });
+      }
+      const uuidPattern =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+      if (!id || !uuidPattern.test(id)) {
+        return res.status(400).json({
+          message: "Invalid product UUID",
+        });
+      }
+
+      const cacheKey = `client-product-detail:${id}`;
+
+      const cachedProduct = await CacheService.getProduct(cacheKey);
+
+      if (cachedProduct) {
+        return res.status(200).json({
+          data: cachedProduct,
+        });
+      }
+
+      const product = await Product.findOne({
+        where: {
+          uuid: id,
+          status: "active",
+          deletedAt: {
+            [Op.is]: null,
+          },
+        },
+        attributes: [
+          "uuid",
+          "tagId",
+          "name",
+          "detail",
+          "price",
+          "stock",
+          "status",
+          "createdAt",
+        ],
+        include: [
+          {
+            model: Category,
+            as: "categories",
+            attributes: ["uuid", "name"],
+            through: {
+              attributes: [],
+            },
+            where: {
+              status: true,
+              deletedAt: {
+                [Op.is]: null,
+              },
+            },
+            required: false,
+          },
+          {
+            model: ProductImage,
+            as: "images",
+            attributes: ["uuid", "path", "image"],
+            where: {
+              status: "active",
+              deletedAt: {
+                [Op.is]: null,
+              },
+            },
+            required: false,
+          },
+        ],
+      });
+
+      if (!product) {
+        return res.status(404).json({
+          message: "Product not found",
+        });
+      }
+
+      // ถ้า CacheService มี method setProduct ให้เพิ่มตรงนี้
+      // await CacheService.setProduct(cacheKey, product);
+
+      return res.status(200).json({
+        data: product,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+
+      console.error("❌ Get client product detail failed:", message);
+
+      return res.status(500).json({
+        message: "Internal server error",
+      });
     }
   }
 }

@@ -14,7 +14,7 @@ http:
     data:
       - name: name
         type: text
-        value: welcome
+        value: "ASMR "
         contentType: Text
       - name: detail
         type: text
@@ -35,17 +35,34 @@ http:
       - name: images
         type: file
         value:
-          - C:\Users\UsEr\Downloads\Gemini_Generated_Image_yykjlbyykjlbyykj.png
-        contentType: image/png
+          - C:\Users\UsEr\Downloads\831769420_1097979036541348_3996965979401953163_n.jpg
+        contentType: image/jpeg
       - name: images
-        type: text
-        value: ""
+        type: file
+        value:
+          - C:\Users\UsEr\Pictures\CnZ_Backgrounds\zucchini_background.jpg
+        contentType: image/jpeg
       - name: categoryIds
         type: text
         value: bfe1bc95-25bc-4975-b634-f6445fe5c659
       - name: categoryIds
         type: text
         value: d6703718-5004-4c74-a2a0-e71eef216aaa
+      - name: images
+        type: file
+        value:
+          - C:\Users\UsEr\Pictures\CnZ_Backgrounds\tomatoes_background.jpg
+        contentType: image/jpeg
+      - name: images
+        type: file
+        value:
+          - C:\Users\UsEr\Pictures\CnZ_Backgrounds\truffles_background.jpg
+        contentType: image/jpeg
+      - name: images
+        type: file
+        value:
+          - C:\Users\UsEr\Pictures\CnZ_Backgrounds\radishes_desktop.jpg
+        contentType: image/jpeg
   auth: inherit
 
 settings:

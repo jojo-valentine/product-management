@@ -1,0 +1,19 @@
+info:
+  name: product_detail_client
+  type: http
+  seq: 19
+
+http:
+  method: GET
+  url: "{{base_url}}/api/products/client/product/detail/:id"
+  params:
+    - name: id
+      value: 31382574-e757-419a-876b-3bb05e12757a
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
