@@ -48,6 +48,7 @@ Product.init(
       type: DataTypes.ENUM("active", "inactive", "archived"),
       defaultValue: "active",
     },
+    
   },
   {
     sequelize,
