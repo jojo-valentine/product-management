@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { Op } from "sequelize";
 import { sequelize } from "../config/database";
 import { Order, OrderItem, Product } from "../models/Associations";
+import { sendN8nWebhook } from "../services/n8n.service";
 
 type CreateOrderItem = {
   productUuid: string;
@@ -134,18 +135,102 @@ export default class ClientOrderController {
           transaction,
         },
       );
+      const lowStockItems: {
+        productId: number;
+        name: string;
+        stock: number;
+        threshold: number;
+      }[] = [];
+
+      const threshold = Number(process.env.LOW_STOCK_THRESHOLD ?? 5);
 
       for (const item of orderItems) {
+        // await Product.decrement("stock", {
+        //   by: item.quantity,
+        //   where: {
+        //     id: item.productId,
+        //   },
+        //   transaction,
+        // });
+        const product = await Product.findByPk(item.productId, {
+          transaction,
+          lock: transaction.LOCK.UPDATE,
+        });
+
+        if (!product) {
+          throw new Error(`Product not found: ${item.productId}`);
+        }
+
+        const previousStock = product.stock;
+
         await Product.decrement("stock", {
           by: item.quantity,
-          where: {
-            id: item.productId,
-          },
+          where: { id: item.productId },
           transaction,
         });
+
+        const newStock = previousStock - item.quantity;
+
+        if (previousStock > threshold && newStock <= threshold) {
+          lowStockItems.push({
+            productId: item.productId,
+            name: item.productName,
+            stock: newStock,
+            threshold,
+          });
+        }
       }
 
       await transaction.commit();
+      console.log({
+        orderId: order.orderNumber,
+        total: order.totalAmount,
+        items: orderItems.map((item) => ({
+          productId: item.productId,
+          name: item.productName,
+          quantity: item.quantity,
+        })),
+        customerName: customerName,
+        customerPhone: customerPhone,
+      });
+
+      void sendN8nWebhook(
+        `${process.env.N8N_WEBHOOK_URL}/webhook/order-created`,
+        {
+          event: "order.created",
+          orderId: order.orderNumber,
+          total: order.totalAmount,
+          items: orderItems.map((item) => ({
+            productId: item.productId,
+            name: item.productName,
+            quantity: item.quantity,
+          })),
+          customerName: customerName,
+          customerPhone: customerPhone,
+        },
+      );
+
+      // แจ้งเตือนสินค้าใกล้หมดแต่ละรายการ
+      for (const item of lowStockItems) {
+        console.log({
+          event: "stock.low",
+          productId: item.productId,
+          name: item.name,
+          stock: item.stock,
+          threshold: item.threshold,
+        });
+
+        void sendN8nWebhook(
+          `${process.env.N8N_WEBHOOK_URL}/webhook/low-stock`,
+          {
+            event: "stock.low",
+            productId: item.productId,
+            name: item.name,
+            stock: item.stock,
+            threshold: item.threshold,
+          },
+        );
+      }
 
       return res.status(201).json({
         message: "Order created successfully",
