@@ -1,0 +1,28 @@
+info:
+  name: n8n Webhooks_low-stock
+  type: http
+  seq: 24
+
+http:
+  method: POST
+  url: http://localhost:5678/webhook-test/low-stock
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "event": "stock.low",
+        "productId": "product-uuid",
+        "name": "Keyboard",
+        "stock": 3,
+        "threshold": 5
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

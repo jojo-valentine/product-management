@@ -1,0 +1,21 @@
+info:
+  name: n8n Webhooks_order-created
+  type: http
+  seq: 23
+
+http:
+  method: POST
+  url: http://localhost:5678/webhook-test/order-created
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: '{"orderId":"ORD-1001","total":1500}'
+  auth: inherit
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
