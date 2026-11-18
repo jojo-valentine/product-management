@@ -1,7 +1,11 @@
 # Product Management System
 
 ## Features
-
+### Product & Category Management
+### Order & Inventory Management
+### AI Product Assistant
+### Workflow Automation
+### Testing & Developer Tools
 - Product CRUD
 - Category CRUD
 - Product search
@@ -107,6 +111,16 @@ REDIS_URL=redis://localhost:6379
 Swagger UI: http://localhost:4000/api-docs/
 
 ## Screenshots
+### Dashboard
+![Dashboard](./screenshots/dashboard.png)
+
+### Product Management
+![Product Management](./screenshots/products_list.png)
+![Product Create](./screenshots/products_create.png)
+![Product from](./screenshots/product_form.png)
+
+### Category Management
+![Category Management](./screenshots/category_list.png)
 
 ### API Testing
 
