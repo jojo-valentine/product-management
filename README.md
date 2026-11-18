@@ -115,9 +115,9 @@ Swagger UI: http://localhost:4000/api-docs/
 ![Dashboard](./screenshots/dashboard.png)
 
 ### Product Management
-![Product Management](./screenshots/products_list.png)
-![Product Create](./screenshots/products_create.png)
-![Product from](./screenshots/product_form.png)
+![Product Management](./screenshots/product_list.png)
+![Product Create](./screenshots/product_create.png)
+![Product from](./screenshots/product_form.png) 
 
 ### Category Management
 ![Category Management](./screenshots/category_list.png)
