@@ -4,6 +4,8 @@ import ProductImage from "./ProductImage";
 import Order from "./Order";
 import OrderItem from "./OrderItem";
 import ProductCategories from "./ProductCategories";
+import Payment from "./Payment";
+import PaymentWebhookEvents from "./PaymentWebhookEvents";
 
 // One-to-many
 Product.hasMany(ProductImage, { foreignKey: "productId", as: "images" });
@@ -40,4 +42,33 @@ OrderItem.belongsTo(Product, {
   as: "product",
 });
 
-export { Product, Category, ProductImage, ProductCategories, Order, OrderItem };
+Order.hasMany(Payment, {
+  foreignKey: "order_id",
+  as: "payments",
+});
+
+Payment.belongsTo(Order, {
+  foreignKey: "order_id",
+  as: "order",
+});
+
+Payment.hasMany(PaymentWebhookEvents, {
+  foreignKey: "payment_id",
+  as: "payment_webhook_events",
+});
+
+PaymentWebhookEvents.belongsTo(Payment, {
+  foreignKey: "payment_id",
+  as: "payment",
+});
+
+export {
+  Product,
+  Category,
+  ProductImage,
+  ProductCategories,
+  Order,
+  OrderItem,
+  Payment,
+  PaymentWebhookEvents,
+};

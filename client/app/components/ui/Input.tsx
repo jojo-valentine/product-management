@@ -42,4 +42,22 @@ const InputWithLabel = React.forwardRef<HTMLInputElement, InputProps>(
 
 InputWithLabel.displayName = "InputWithLabel";
 
-export { Input, InputWithLabel };
+const InputOrder = React.forwardRef<
+  HTMLInputElement,
+  React.ComponentProps<"input">
+>(({ className, type, ...props }, ref) => {
+  return (
+    <input
+      type={type}
+      className={cn(
+        "w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100",
+        className,
+      )}
+      ref={ref}
+      {...props}
+    />
+  );
+});
+InputOrder.displayName = "InputOrder";
+
+export { Input, InputWithLabel, InputOrder };

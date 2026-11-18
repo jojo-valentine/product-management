@@ -3,6 +3,7 @@ import cors from "cors";
 import { sequelize } from "./config/database";
 import { corsOptions } from "./middleware/corsOptions";
 import apiRoutes from "./routes";
+import webhookRawRoutes from "./routes/webhookRawRoutes";
 import { apiLimiter } from "./middleware/rateLimit";
 import { connectRedis } from "./config/redis";
 import helmet from "helmet";
@@ -14,15 +15,19 @@ const app = express();
 // เปิดใช้งาน CORS แบบ pro (ใช้ config แยก)
 app.use(cors(corsOptions));
 
-// Middleware สำหรับ JSON
-app.use(express.json());
-
 setupSwagger(app);
 
 app.use(
   "/uploads",
   express.static(path.resolve(process.cwd(), "uploads")), // ใช้ root ของ project
 ); // รองรับ form submit (x-www-form-urlencoded)
+
+// Webhook ต้องอยู่ก่อน express.json()
+app.use("/api/webhooks", webhookRawRoutes);
+
+// Middleware สำหรับ JSON
+app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use("/api", apiLimiter);

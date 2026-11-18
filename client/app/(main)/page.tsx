@@ -12,7 +12,7 @@ export default function HomePage() {
   const [data, setData] = useState<DataDashboard>();
   const [alert, setAlert] = useState<AlertState>(null);
   const [loading, setLoading] = useState(false);
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const result = await axios.get(`/api/dashboard/`);
@@ -20,12 +20,14 @@ export default function HomePage() {
       setData(data);
     } catch (error: unknown) {
       const message =
-        error instanceof Error ? error.message : "โหลดข้อมูล Dashboard ไม่สำเร็จ";
+        error instanceof Error
+          ? error.message
+          : "โหลดข้อมูล Dashboard ไม่สำเร็จ";
       setAlert({ type: "error", message });
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -74,7 +76,7 @@ export default function HomePage() {
       </AnimatePresence>
       <div className="mx-auto max-w-7xl px-6 py-10">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-white">Dashboard</h1>
 
           <p className="mt-2 text-gray-500">
             Manage your products and categories.
@@ -84,17 +86,17 @@ export default function HomePage() {
         <div className="grid gap-6 md:grid-cols-2">
           <div className="rounded-xl border bg-white p-6 shadow-sm">
             <p className="text-sm text-gray-500">Products</p>
-            <p className="mt-2 text-3xl font-bold">{data?.products ?? "-"}</p>
+            <p className="mt-2 text-3xl font-bold text-black">{data?.products ?? "-"}</p>
           </div>
 
           <div className="rounded-xl border bg-white p-6 shadow-sm">
             <p className="text-sm text-gray-500">Categories</p>
-            <p className="mt-2 text-3xl font-bold">{data?.categories ?? "-"}</p>
+            <p className="mt-2 text-3xl font-bold text-black">{data?.categories ?? "-"}</p>
           </div>
         </div>
 
         <div className="mt-8 rounded-xl border bg-white p-6">
-          <h2 className="text-lg font-semibold">Product Management</h2>
+          <h2 className="text-lg font-semibold text-black">Product Management</h2>
 
           <p className="mt-2 text-sm text-gray-500">
             Use the navigation above to manage products and categories.

@@ -992,6 +992,7 @@ class ProductController {
             [Op.is]: null,
           },
         },
+        required: categoryId.length > 0,
       };
 
       if (categoryId.length > 0) {

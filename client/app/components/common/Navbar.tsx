@@ -16,6 +16,10 @@ const navItems = [
     name: "Categories",
     href: "/categories",
   },
+  {
+    name: "Orders",
+    href: "/orders",
+  },
 ];
 
 export default function Navbar() {
@@ -24,7 +28,7 @@ export default function Navbar() {
   return (
     <nav className="border-b bg-white">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link href="/" className="text-xl font-bold">
+        <Link href="/" className="text-xl font-bold text-black">
           Product Management
         </Link>
 
@@ -40,9 +44,7 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={`text-sm font-medium transition ${
-                  isActive
-                    ? "text-black"
-                    : "text-gray-500 hover:text-black"
+                  isActive ? "text-black" : "text-gray-500 hover:text-black"
                 }`}
               >
                 {item.name}

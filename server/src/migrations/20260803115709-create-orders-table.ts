@@ -27,7 +27,7 @@ export default {
         allowNull: false,
       },
       totalAmount: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
       orderStatus: {

@@ -1,0 +1,28 @@
+info:
+  name: order_client_list
+  type: http
+  seq: 28
+
+http:
+  method: GET
+  url: "{{base_url}}/api/orders/list"
+  headers:
+    - name: Content-Type
+      value: application/json
+      disabled: true
+
+runtime:
+  variables:
+    - name: orderUuid
+      value: c3c3e0b8-5e05-4512-91e0-2db187ad5bd3
+      disabled: true
+    - name: result
+      value: "{{result_payment_create}}"
+      disabled: true
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

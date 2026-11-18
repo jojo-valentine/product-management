@@ -53,11 +53,8 @@ const router = Router();
  *         description: Internal server error
  */
 
+router.get("/", (req, res) => res.send("✅  API is working!"));
 router.post("/create-order", ClientOrderController.createOrder);
-
-router.patch(
-  "/:uuid/pay",
-  ClientOrderController.mockPayOrder,
-);
-router.get("/", (req, res) => res.send("orders"));
+router.get("/list", ClientOrderController.ordersList);
+router.patch("/:uuid/pay", ClientOrderController.mockPayOrder);
 export default router;

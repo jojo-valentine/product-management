@@ -6,7 +6,7 @@ export interface IOrder {
   orderNumber: string;
   customerName: string;
   customerPhone: string;
-  totalAmount: number;
+  totalAmount: string | number;
   orderStatus: "pending" | "confirmed" | "cancelled";
   paymentStatus: "pending" | "paid" | "failed";
   createdAt?: Date;
@@ -21,8 +21,8 @@ export interface IOrderItem {
   productId: number;
   productName: string;
   quantity: number;
-  unitPrice: number;
-  totalPrice: number;
+  unitPrice: string | number;
+  totalPrice: string | number;
   createdAt?: Date;
   updatedAt?: Date;
 }

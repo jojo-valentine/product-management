@@ -1,0 +1,34 @@
+info:
+  name: mock-gateway_pay_retry
+  type: http
+  seq: 27
+
+http:
+  method: POST
+  url: "{{base_url}}/api/mock-gateway/retry/:even-id"
+  headers:
+    - name: Idempotency-Key
+      value: "{{$guid}}"
+      disabled: true
+    - name: Content-Type
+      value: application/json
+  params:
+    - name: even-id
+      value: "{{payment_uuid}}"
+      type: path
+  auth: inherit
+
+runtime:
+  variables:
+    - name: orderUuid
+      value: c3c3e0b8-5e05-4512-91e0-2db187ad5bd3
+    - name: result
+      value: "{{result_payment_create}}"
+      disabled: true
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -2,7 +2,13 @@ import { randomUUID } from "crypto";
 import { Request, Response } from "express";
 import { Op } from "sequelize";
 import { sequelize } from "../config/database";
-import { Order, OrderItem, Product } from "../models/Associations";
+import {
+  Order,
+  OrderItem,
+  Payment,
+  PaymentWebhookEvents,
+  Product,
+} from "../models/Associations";
 import { sendN8nWebhook } from "../services/n8n.service";
 
 type CreateOrderItem = {
@@ -300,6 +306,133 @@ export default class ClientOrderController {
           paymentStatus: order.paymentStatus,
         },
       });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+
+      console.error("❌ Mock payment failed:", message);
+
+      return res.status(500).json({
+        message: "Internal server error",
+      });
+    }
+  }
+
+  static async ordersList(req: Request, res: Response) {
+    // status create update
+    try {
+      // const where: any = {};
+      const status = (req.query.status as string) || "";
+      const create = (req.query.create as string) || "";
+      const searchRaw = (req.query.search as string) || "";
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const search = typeof searchRaw === "string" ? searchRaw.trim() : "";
+      const where: any = {};
+
+      if (search.length > 100)
+        return res.status(400).json({ message: "Search query too long" });
+      if (page < 1)
+        return res.status(400).json({ message: "Page must be >= 1" });
+      if (limit < 1 || limit > 100)
+        return res
+          .status(400)
+          .json({ message: "Limit must be between 1 and 100" });
+      if (search) {
+        where[Op.or] = [
+          { orderNumber: { [Op.like]: `%${search}%` } },
+          { customerName: { [Op.like]: `%${search}%` } },
+          { customerPhone: { [Op.like]: `%${search}%` } },
+        ];
+      }
+      if (status) {
+        where.paymentStatus = status;
+      }
+      if (create) {
+        const startDate = new Date(`${create}T00:00:00.000+07:00`);
+        const endDate = new Date(`${create}T00:00:00.000+07:00`);
+
+        endDate.setDate(endDate.getDate() + 1);
+
+        where.createdAt = {
+          [Op.gte]: startDate,
+          [Op.lt]: endDate,
+        };
+      }
+
+      const offset = (page - 1) * limit;
+
+      const { rows: orders, count } = await Order.findAndCountAll({
+        where,
+        limit,
+        offset,
+        order: [["createdAt", "DESC"]],
+        attributes: [
+          "uuid",
+          "orderNumber",
+          "customerName",
+          "customerPhone",
+          "orderStatus",
+          "createdAt",
+          "updatedAt",
+        ],
+        include: [
+          {
+            model: Payment,
+            as: "payments",
+            where: {},
+            attributes: [
+              "uuid",
+              "order_id",
+              "payment_method",
+              "amount",
+              "currency",
+              "status",
+              "paid_at",
+            ],
+            required: false,
+            // include: [
+            //   {
+            //     model: PaymentWebhookEvents,
+            //     as: "payment_webhook_events",
+            //     where: {
+            //       // deletedAt: {
+            //       //   [Op.is]: null,
+            //       // },
+            //     },
+            //     attributes: ["uuid", "event_id", "payment_id" ,"event_type"],
+            //     required: false,
+            //   },
+            // ],
+          },
+          {
+            model: OrderItem,
+            as: "items",
+            // where: {
+
+            // },
+            attributes: [
+              "uuid",
+              "productName",
+              "quantity",
+              "unitPrice",
+              "totalPrice",
+            ],
+            required: false,
+          },
+        ],
+        distinct: true,
+      });
+
+      const result = {
+        data: orders,
+        pagination: {
+          total: count,
+          page: Number(page),
+          limit: Number(limit),
+          totalPages: Math.ceil(count / Number(limit)),
+        },
+      };
+      return res.json(result);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
 

@@ -1,0 +1,39 @@
+info:
+  name: payment_create
+  type: http
+  seq: 25
+
+http:
+  method: POST
+  url: "{{base_url}}/api/payments/create"
+  headers:
+    - name: Idempotency-Key
+      value: "{{$guid}}"
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "orderUuid" : "{{orderUuid}}"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: orderUuid
+      value: c3c3e0b8-5e05-4512-91e0-2db187ad5bd3
+  scripts:
+    - type: after-response
+      code: |-
+        bru.setVar("message", res.body.message);
+        bru.setVar("payment_uuid", res.body.data.uuid);
+        bru.setVar("payment_id", res.body.data.id);
+        bru.setVar("payment_status", res.body.data.status);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -42,11 +42,11 @@ export default {
         allowNull: false,
       },
       unitPrice: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
       totalPrice: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
       createdAt: {
